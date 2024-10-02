@@ -1,31 +1,41 @@
-
+using Core.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Data.SeedData;
 using Microsoft.EntityFrameworkCore;
 
-namespace API
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddControllers();
+builder.Services.AddDbContext<StoreContext>(opt =>
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
-            // Add services to the container.
 
-            builder.Services.AddControllers();
-            builder.Services.AddDbContext<StoreContext>(opt =>
-            {
-                opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
+var app = builder.Build();
 
-            var app = builder.Build();
+// Configure the HTTP request pipeline.
 
-            // Configure the HTTP request pipeline.
-           
 
-            app.MapControllers();
 
-            app.Run();
-        }
-    }
+
+app.MapControllers();
+
+try
+{
+    using var scope = app.Services.CreateScope();
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<StoreContext>();
+    await context.Database.MigrateAsync();
+    await StoreContextSeed.SeedAsync(context);
 }
+catch (Exception ex)
+{
+    Console.WriteLine(ex);
+    throw;
+}
+
+app.Run();
