@@ -8,6 +8,10 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\client\browser\</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="src\app\core\" />
+    <Folder Include="src\app\features\" />
+    <Folder Include="src\app\layout\" />
+    <Folder Include="src\app\shared\models\" />
     <Folder Include="ssl\" />
   </ItemGroup>
 </Project>
