@@ -1,0 +1,15 @@
+﻿<div class="w-full">
+    <mat-radio-group [value]="cartService.selectedDelivery()?.id" (change)="updateDeliveryMethod($event.value)"
+                     class="gap-4 grid grid-cols-2">
+        @for (method of chechoutService.deliveryMethods; track method.id) {
+        <label class="p-3 border-gray-200 h-full w-full cursor-pointer border hover:bg-purple-100">
+            <mat-radio-button class="h-full w-full" [checked]="cartService.selectedDelivery() === method" [value]="method">
+                <div class="flex h-full w-full flex-col">
+                    <strong>{{method.shortName}} - {{method.price | currency}}</strong>
+                    <span class="text-sm">{{method.description}}</span>
+                </div>
+            </mat-radio-button>
+        </label>
+        }
+    </mat-radio-group>
+</div>
