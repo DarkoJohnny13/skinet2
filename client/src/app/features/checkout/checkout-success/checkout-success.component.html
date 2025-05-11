@@ -1,30 +1,58 @@
-﻿<section class="bg-white py-16">
-    <div class="px-4 mx-auto max-w-2xl">
+<section *ngIf="signalrService.orderSignal() as order" class="bg-white py-16">
+    <div class="mx-auto max-w-2xl px-4">
         <h2 class="mb-2 text-2xl font-semibold">Thanks for your fake order!</h2>
-        <p class="text-gray-500 mb-8">
-            Your order <span class="font-medium">#42</span>
+        <p class="mb-8 text-gray-500">
+            Your order <span class="font-medium">
+                #{{order.id}}
+            </span>
             will never be processed as this is fake a fake shop. we will not notify you once your order has not shipped.
         </p>
-        <div class="space-y-2 border-gray-100 bg-gray-50 p-6 mb-8 rounded-lg border">
-            <dl class="gap-4 flex items-center justify-between">
-                <dt class="text-gray-500 font-normal">Date</dt>
-                <dd class="text-gray-900 text-end font-medium">20 Sep 2024</dd>
+        <div class="mb-8 space-y-2 rounded-lg border border-gray-100 bg-gray-50 p-6">
+            <dl class="flex items-center justify-between gap-4">
+                <dt class="font-normal text-gray-500">Date</dt>
+                <dd class="text-end font-medium text-gray-900">
+                    {{order.orderDate | date: 'medium'}}
+                </dd>
             </dl>
-            <dl class="gap-4 flex items-center justify-between">
-                <dt class="text-gray-500 font-normal">Payment method</dt>
-                <dd class="text-gray-900 text-end font-medium">Visa</dd>
+            <dl class="flex items-center justify-between gap-4">
+                <dt class="font-normal text-gray-500">Payment method</dt>
+                <dd class="text-end font-medium text-gray-900">
+                    {{order.paymentSummary | paymentCard}}
+                </dd>
             </dl>
-            <dl class="gap-4 flex items-center justify-between">
-                <dt class="text-gray-500 font-normal">Address</dt>
-                <dd class="text-gray-900 text-end font-medium">Address goes here</dd>
+            <dl class="flex items-center justify-between gap-4">
+                <dt class="font-normal text-gray-500">Address</dt>
+                <dd class="text-end font-medium text-gray-900">
+                    {{order.shippingAddress | address}}
+                </dd>
             </dl>
-            <dl class="gap-4 flex items-center justify-between">
-                <dt class="text-gray-500 font-normal">Amount</dt>
-                <dd class="text-gray-900 text-end font-medium">100</dd>
+            <dl class="flex items-center justify-between gap-4">
+                <dt class="font-normal text-gray-500">Amount</dt>
+                <dd class="text-end font-medium text-gray-900">
+                    {{order.total | currency}}
+                </dd>
             </dl>
         </div>
-        <div class="space-x-4 flex items-center">
-            <button routerLink="/orders/42" mat-flat-button>View your order</button>
+        <div class="flex items-center space-x-4">
+            <button routerLink="/orders/{{order.id}}" mat-flat-button>View your order</button>
+            <button routerLink="/shop" mat-stroked-button>Continue shopping</button>
+
+        </div>
+    </div>
+</section>
+
+<section *ngIf="!signalrService.orderSignal()" class="bg-white py-16">
+    <div class="mx-auto max-w-2xl px-4">
+        <h2 class="mb-2 text-2xl font-semibold">Order processing... please wait</h2>
+
+        <div class="mb-8 space-y-2 rounded-lg border border-gray-100 bg-gray-50 p-6">
+            <div class="flex flex-col items-center justify-center">
+                <mat-progress-spinner diameter="30"></mat-progress-spinner>
+                <p class="text-xl">Loading order...</p>
+                <span>Your payment has been received. We are creating the order</span>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
             <button routerLink="/shop" mat-stroked-button>Continue shopping</button>
 
         </div>
